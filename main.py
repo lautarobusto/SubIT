@@ -3,7 +3,7 @@ import requests
 from Subtitulo import Subtitulo
 
 # url de subdivx con una buscqueda ingresada en el campo de busqueda de subdivx
-url = "http://www.subdivx.com/index.php?accion=5&buscar=breaking+bad&masdesc=&idusuario=&nick=&oxfecha=&oxcd=&oxdown=&pg=1"
+url = "http://www.subdivx.com/index.php?buscar=ironman&accion=5&masdesc=&subtitulos=1&realiza_b=1"
 
 linkList = []
 tituloList = []
@@ -25,11 +25,11 @@ while hasnext == True:
 
         # Checkeo si hay mas paginas y obtengo enlace de la proxima si existe
         pag = html.find('div', {"class": "pagination"})
-        current = pag.find('span', {"class": "current"}).text
-        print("Current" + current)
+        # print(type(pag))
 
         if len(pag) > 0:
-            print("tiene mas paginas:")
+            current = pag.find('span', {"class": "current"}).text
+
             # con esto obtengo la cantidad de paginas que me devolvio la consulta inicial
             for a in pag.find_all('a'):
                 cantP.append(a.text)
@@ -37,16 +37,12 @@ while hasnext == True:
             if cant == 0:
                 cant = cantP[-2]
             url = nextList[-1]
-            print(cant)
 
-
-
-
+            if int(current) == int(cant):
+                hasnext = False
 
         else:
-            print("Solo una pagina")
-            hasnext = False
-        if int(current) == int(cant):
+
             hasnext = False
 
         # obtengo Titulo, descripcion, descargas y enlaces por cada subtitulo y lo almaceno en una lista de objetos Subtitulo
@@ -58,6 +54,9 @@ while hasnext == True:
             linkList.append(link.get('href'))
 
         for descarga in html.find_all('div', id="buscador_detalle_sub_datos"):
+            for a in descarga.text:
+                print(a)
+            #descargaList.append(aux[1])
             descargaList.append(descarga.text)
 
         for i in range(len(tituloList)):
@@ -65,8 +64,7 @@ while hasnext == True:
 
             subtitulos.append(x)
 
-            for subs in subtitulos:
-                print("Titulo:" + subs.titulo + "\n" + "Descargas:" + subs.descargas + "\n" + "Descripcion:" + subs.descripcion + "\n" + "Enlace:" + subs.link)
+
 
 
 
@@ -76,3 +74,10 @@ while hasnext == True:
     else:
 
         print("Status Code %d" % statusCode)
+f = open('file.txt', 'w')
+
+for subs in subtitulos:
+    f.write(
+        "--------------------------------------------------------------------------------------------------------------------------------------------\n")
+    f.write("Titulo:" + subs.titulo + "\n" + "Descargas:" + subs.descargas + "\n" + "Descripcion:" + str(
+        subs.descripcion.encode('utf8')) + "\n" + "Enlace:" + subs.link + "\n")
