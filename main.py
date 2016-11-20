@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 from Subtitulo import Subtitulo
+import re
 
 # url de subdivx con una buscqueda ingresada en el campo de busqueda de subdivx
 url = "http://www.subdivx.com/index.php?buscar=ironman&accion=5&masdesc=&subtitulos=1&realiza_b=1"
@@ -54,10 +55,8 @@ while hasnext == True:
             linkList.append(link.get('href'))
 
         for descarga in html.find_all('div', id="buscador_detalle_sub_datos"):
-            for a in descarga.text:
-                print(a)
-            #descargaList.append(aux[1])
-            descargaList.append(descarga.text)
+            wordList = re.sub("[^0-9\\,]", " ", descarga.text).split()
+            descargaList.append(wordList[0])
 
         for i in range(len(tituloList)):
             x = Subtitulo(tituloList[i], descripcionList[i], descargaList[i], linkList[i])
