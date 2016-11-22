@@ -1,9 +1,7 @@
 from bs4 import BeautifulSoup
-import requests
+import requests, urllib.request, shutil, codecs, re
 from Subtitulo import Subtitulo
-import re
-import codecs
-import urllib.request, shutil, rarfile
+
 
 def getsubs(url):
     linkList = []
@@ -79,10 +77,10 @@ def geturl(title, season, chapter):
 
 
 def saveresultfile(subtitulos):
-
     f = codecs.open('file.txt', 'w', "utf-8")
     for subs in subtitulos:
-        f.write("--------------------------------------------------------------------------------------------------------------------------------------------\n")
+        f.write(
+            "--------------------------------------------------------------------------------------------------------------------------------------------\n")
         f.write("Titulo:" + subs.titulo + "\n" + "Descargas:" + subs.descargas + "\n" + "Descripcion:" +
                 subs.descripcion + "\n" + "Enlace:" + subs.link + "\n")
 
@@ -92,5 +90,3 @@ def download_rar(url):
 
     with urllib.request.urlopen(url) as response, open(file_name, 'wb') as out_file:
         shutil.copyfileobj(response, out_file)
-
-
