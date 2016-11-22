@@ -3,7 +3,7 @@ import requests
 from Subtitulo import Subtitulo
 import re
 import codecs
-
+import urllib.request, shutil, rarfile
 
 def getsubs(url):
     linkList = []
@@ -78,18 +78,19 @@ def geturl(title, season, chapter):
     return url
 
 
-
-
-
-def saveresultfile():
-
-    subtitulos = getsubs(geturl("ironman", "", ""))
+def saveresultfile(subtitulos):
 
     f = codecs.open('file.txt', 'w', "utf-8")
     for subs in subtitulos:
-        f.write(
-            "--------------------------------------------------------------------------------------------------------------------------------------------\n")
+        f.write("--------------------------------------------------------------------------------------------------------------------------------------------\n")
         f.write("Titulo:" + subs.titulo + "\n" + "Descargas:" + subs.descargas + "\n" + "Descripcion:" +
                 subs.descripcion + "\n" + "Enlace:" + subs.link + "\n")
 
-saveresultfile()
+
+def download_rar(url):
+    file_name = 'myzip.rar'
+
+    with urllib.request.urlopen(url) as response, open(file_name, 'wb') as out_file:
+        shutil.copyfileobj(response, out_file)
+
+
